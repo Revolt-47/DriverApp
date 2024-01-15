@@ -20,7 +20,7 @@ const HomeScreen = ({ navigation }) => {
         const driverToken = await AsyncStorage.getItem('driverToken');
         const driverId = await AsyncStorage.getItem('driverId');
 
-        const response = await fetch('http://192.168.18.51:3000/driver/getDetails', {
+        const response = await fetch('http://172.17.44.214:3000/driver/getDetails', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

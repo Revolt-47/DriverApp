@@ -5,7 +5,6 @@ import {
   List,
   IconButton,
   Title,
-  Colors,
   Surface,
   Button,
   Paragraph,
@@ -17,7 +16,7 @@ const StudentsScreen = () => {
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [students, setStudents] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [showVehicleModal, setShowVehicleModal] = useState(false);
@@ -30,7 +29,7 @@ const StudentsScreen = () => {
         const driverToken = await AsyncStorage.getItem('driverToken');
         const driverId = await AsyncStorage.getItem('driverId');
 
-        const response = await fetch('http://192.168.18.51:3000/driver/getSchools', {
+        const response = await fetch('http://172.17.44.214:3000/driver/getSchools', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -65,7 +64,7 @@ const StudentsScreen = () => {
       const driverToken = await AsyncStorage.getItem('driverToken');
       const driverId = await AsyncStorage.getItem('driverId');
 
-      const response = await fetch('http://192.168.18.51:3000/driver/getStudents', {
+      const response = await fetch('http://172.17.44.214:3000/driver/getStudents', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +90,7 @@ const StudentsScreen = () => {
   const handleSchoolSelection = (school) => {
     setSelectedSchool(school);
     fetchStudents(school._id);
-    setShowModal(false);
+    setModalVisible(false);
   };
 
   const handleCheckboxToggle = (studentId) => {
@@ -112,7 +111,7 @@ const StudentsScreen = () => {
       const driverToken = await AsyncStorage.getItem('driverToken');
       const driverId = await AsyncStorage.getItem('driverId');
 
-      const response = await fetch('http://192.168.18.51:3000/driver/getVehicles', {
+      const response = await fetch('http://172.17.44.214:3000/driver/getVehicles', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -145,6 +144,14 @@ const StudentsScreen = () => {
     console.log('Calling students with vehicle:', vehicle);
   };
 
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <View style={styles.container}>
       <IconButton
@@ -152,7 +159,7 @@ const StudentsScreen = () => {
         color="white"
         size={25}
         style={styles.selectedSchoolButton}
-        onPress={() => setShowModal(true)}
+        onPress={handleOpenModal}
       >
         {selectedSchool ? (
           <Title style={styles.selectedSchoolDescription}>
@@ -197,6 +204,33 @@ const StudentsScreen = () => {
       >
         Call Students
       </Button>
+
+      {/* School Selection Modal */}
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={handleCloseModal}
+        transparent={true}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Title style={styles.modalTitle}>Select School</Title>
+            <FlatList
+              data={schools}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item }) => (
+                <List.Item
+                  title={item.branchName}
+                  onPress={() => {
+                    handleSchoolSelection(item);
+                    handleCloseModal();
+                  }}
+                />
+              )}
+            />
+          </View>
+        </View>
+      </Modal>
 
       {/* Vehicle Selection Modal */}
       <Modal

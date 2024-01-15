@@ -35,7 +35,7 @@ const LoginScreen = ({navigation}) => {
     try {
       console.log(email, password);
   
-      const response = await fetch('http://192.168.18.51:3000/driver/login', {
+      const response = await fetch('http://172.17.44.214:3000/driver/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
