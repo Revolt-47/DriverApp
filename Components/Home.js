@@ -1,44 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { View, Image, ActivityIndicator } from 'react-native';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import { Avatar } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import SideMenu from './SideMenu';
-import ChangePasswordScreen from './ChangePassword';
-import UpdateProfileScreen from './UpdateProfile';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import StudentsScreen from './Students';
+import React, { useState, useEffect } from "react";
+import { View, Image, ActivityIndicator } from "react-native";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
+import { Avatar, Text, useTheme } from "@ui-kitten/components";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import SideMenu from "./SideMenu";
+import ChangePasswordScreen from "./ChangePassword";
+import UpdateProfileScreen from "./UpdateProfile";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import StudentsScreen from "./Students";
 
 const HomeScreen = ({ navigation }) => {
   const Drawer = createDrawerNavigator();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const driverToken = await AsyncStorage.getItem('driverToken');
-        const driverId = await AsyncStorage.getItem('driverId');
+        const driverToken = await AsyncStorage.getItem("driverToken");
+        const driverId = await AsyncStorage.getItem("driverId");
 
-        const response = await fetch('http://172.17.44.214:3000/driver/getDetails', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            token: driverToken,
-            driverId,
-          }),
-        });
+        const response = await fetch(
+          "http://172.17.44.214:3000/driver/getDetails",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              token: driverToken,
+              driverId,
+            }),
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
           setUser(data);
         } else {
-          console.error('Failed to fetch driver details:', response.status);
+          console.error("Failed to fetch driver details:", response.status);
         }
       } catch (error) {
-        console.error('Error fetching driver details:', error);
+        console.error("Error fetching driver details:", error);
       } finally {
         setLoading(false);
       }
@@ -50,8 +58,17 @@ const HomeScreen = ({ navigation }) => {
   const CustomDrawerContent = (props) => {
     return (
       <DrawerContentScrollView {...props}>
-        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-          <Image source={require('../assets/logo.jpeg')} style={{ width: 80, height: 80, borderRadius: 40 }} />
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 16,
+          }}
+        >
+          <Image
+            source={require("../assets/logo.jpeg")}
+            style={{ width: 80, height: 80, borderRadius: 40 }}
+          />
         </View>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
@@ -61,14 +78,22 @@ const HomeScreen = ({ navigation }) => {
   function MyDrawer() {
     if (loading) {
       return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#0000ff" />
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator
+            size="large"
+            color={theme["color-primary-default"]}
+          />
         </View>
       );
     }
 
     return (
-      <Drawer.Navigator initialRouteName="Students" drawerContent={(props) => <CustomDrawerContent {...props} />}>
+      <Drawer.Navigator
+        initialRouteName="Students"
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
+      >
         <Drawer.Screen
           name="ChangePassword"
           component={ChangePasswordScreen}
@@ -79,16 +104,19 @@ const HomeScreen = ({ navigation }) => {
           }}
         />
 
-<Drawer.Screen
+        <Drawer.Screen
           name="Students"
           component={StudentsScreen}
           options={{
             drawerIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="account-child" size={size} color={color} />
+              <MaterialCommunityIcons
+                name="account-child"
+                size={size}
+                color={color}
+              />
             ),
           }}
         />
-
 
         <Drawer.Screen
           name="UpdateProfile"
@@ -96,7 +124,11 @@ const HomeScreen = ({ navigation }) => {
           initialParams={{ user }}
           options={{
             drawerIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="account-edit" size={size} color={color} />
+              <MaterialCommunityIcons
+                name="account-edit"
+                size={size}
+                color={color}
+              />
             ),
           }}
         />
@@ -106,7 +138,12 @@ const HomeScreen = ({ navigation }) => {
           component={SideMenu}
           options={{
             drawerIcon: ({ color, size }) => (
-              <Avatar.Icon size={size} icon="logout" color={color} style={{ backgroundColor: 'white' }} />
+              <Avatar.Icon
+                size={size}
+                icon="logout"
+                color={color}
+                style={{ backgroundColor: theme["color-basic-100"] }}
+              />
             ),
           }}
         />
