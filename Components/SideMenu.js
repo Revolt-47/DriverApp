@@ -1,3 +1,5 @@
+
+import { registerIndieID, unregisterIndieDevice } from 'native-notify';
 import React, { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -9,6 +11,7 @@ import {
   Text,
 } from "@ui-kitten/components";
 
+
 const SideMenu = ({ navigation }) => {
   const theme = useTheme(); // Access the theme
 
@@ -17,10 +20,14 @@ const SideMenu = ({ navigation }) => {
   }, []);
 
   const handleLogout = async () => {
+    const driverId = await AsyncStorage.getItem('driverId');
     // Perform logout logic, such as clearing the AsyncStorage and navigating to the login screen.
-    await AsyncStorage.removeItem("driverToken");
-    await AsyncStorage.removeItem("driverId");
-    navigation.navigate("Login");
+
+    unregisterIndieDevice(driverId, 19959, 'tOGmciFdfRxvdPDp3MiotN');
+    await AsyncStorage.removeItem('driverToken');
+    await AsyncStorage.removeItem('driverId');
+    navigation.navigate('Login');
+
   };
 
   return (

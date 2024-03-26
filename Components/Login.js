@@ -1,3 +1,5 @@
+
+import { registerIndieID, unregisterIndieDevice } from 'native-notify';
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -5,6 +7,7 @@ import { Button, Input, Text, Layout } from "@ui-kitten/components";
 import { Snackbar } from "react-native-paper";
 
 const logoImage = require("../assets/logo.jpeg");
+
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -23,8 +26,11 @@ const LoginScreen = ({ navigation }) => {
       const driverIdValue = driverId[1];
       const driverTokenValue = driverToken[1];
 
-      if (driverIdValue && driverTokenValue) {
-        navigation.navigate("Home");
+
+      if(driverIdValue && driverTokenValue){
+        registerIndieID(driverIdValue, 19959, 'tOGmciFdfRxvdPDp3MiotN');
+          navigation.navigate('Home')
+
       }
     });
   }, []);
@@ -53,6 +59,11 @@ const LoginScreen = ({ navigation }) => {
       console.log(responseData);
       const token = responseData.token;
       const driverId = responseData.driverId;
+
+      registerIndieID(driverId, 19959, 'tOGmciFdfRxvdPDp3MiotN');
+// Store the driverToken and guardianId in local storage
+await AsyncStorage.setItem('driverToken', token);
+await AsyncStorage.setItem('driverId', driverId);
 
       // Store the driverToken and guardianId in local storage
       await AsyncStorage.setItem("driverToken", token);
