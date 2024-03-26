@@ -5,12 +5,13 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import LoginScreen from './Components/Login';
 import HomeScreen from './Components/Home';
-
+import registerNNPushToken from 'native-notify';
 
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  registerNNPushToken(19959, 'tOGmciFdfRxvdPDp3MiotN');
   return (
     <SafeAreaProvider>
       <NavigationContainer>

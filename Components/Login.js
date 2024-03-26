@@ -3,7 +3,7 @@ import { View, StyleSheet, ImageBackground, Image } from 'react-native';
 import { TextInput, Button, Snackbar, Text } from 'react-native-paper';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { registerIndieID, unregisterIndieDevice } from 'native-notify';
 
 const backgroundImage = require('../assets/logo.jpeg'); // Import the background image
 const logoImage = require('../assets/logo.jpeg'); // Import the circular logo image
@@ -26,6 +26,7 @@ const LoginScreen = ({navigation}) => {
       const driverTokenValue = driverToken[1];
 
       if(driverIdValue && driverTokenValue){
+        registerIndieID(driverIdValue, 19959, 'tOGmciFdfRxvdPDp3MiotN');
           navigation.navigate('Home')
       }
     });
@@ -55,7 +56,7 @@ const LoginScreen = ({navigation}) => {
       console.log(responseData)
       const token = responseData.token;
       const driverId = responseData.driverId;
-  
+      registerIndieID(driverId, 19959, 'tOGmciFdfRxvdPDp3MiotN');
 // Store the driverToken and guardianId in local storage
 await AsyncStorage.setItem('driverToken', token);
 await AsyncStorage.setItem('driverId', driverId);
